@@ -1,2 +1,2 @@
-# kgs-utils-js
-Common utilities for KGS applications
+# utils-js
+Common javascript utilities for KGS applications
