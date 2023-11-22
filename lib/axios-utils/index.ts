@@ -76,7 +76,7 @@ export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
      * @param interceptor Request Interceptor to add to the axios instance
      * @returns AxiosBuilder
      */
-    addRequestInterceptor(interceptor: Interceptor<InternalAxiosRequestConfig>) {
+    public addRequestInterceptor(interceptor: Interceptor<InternalAxiosRequestConfig>) {
         this.axiosInstance.interceptors.request.use(
             interceptor.onFulfilled,
             interceptor.onRejected,
@@ -91,7 +91,7 @@ export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
      * @param interceptor Response Interceptor to add to the axios instance
      * @returns AxiosBuilder
      */
-    addResponseInterceptor(interceptor: Interceptor<AxiosResponse>) {
+    public addResponseInterceptor(interceptor: Interceptor<AxiosResponse>) {
         this.axiosInstance.interceptors.response.use(
             interceptor.onFulfilled,
             interceptor.onRejected,
