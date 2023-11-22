@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, HttpStatusCode } from 'axios';
 import nock from 'nock';
-import { AxiosBuilder } from '../index';
+import { AxiosDecorator } from '../index';
 
 /**
  * Mock http requests with a list of responses.
@@ -35,7 +35,7 @@ function setupResponses(client: AxiosInstance, responses: Array<Function>) {
 
 describe('getClient', () => {
     it('should get the configured axios instance', () => {
-        let httpClient = new AxiosBuilder({ baseURL: 'http://test.com' }).getClient();
+        let httpClient = new AxiosDecorator({ baseURL: 'http://test.com' }).getClient();
         httpClient instanceof axios;
 
         expect(httpClient.defaults.baseURL).toEqual('http://test.com');
@@ -54,7 +54,7 @@ describe('addRateLimiter', () => {
             perMilliseconds: 100,
         });
         const successCallback = jest.fn(async () => {});
-        let httpClient = new AxiosBuilder({ baseURL: 'http://www.test.com' })
+        let httpClient = new AxiosDecorator({ baseURL: 'http://www.test.com' })
             .addRateLimiter(rateLimitOptions)
             .getClient();
         let responses = Array();
@@ -84,7 +84,7 @@ describe('addRateLimitRetry', () => {
 
     it('should retry a request if Rate limit reached (TooManyRequests)', async () => {
         const retryCallback = jest.fn();
-        const httpClientBuilder = new AxiosBuilder({
+        const httpClientBuilder = new AxiosDecorator({
             baseURL: 'http://www.test.com',
         });
 
@@ -116,7 +116,7 @@ describe('addRateLimitRetry', () => {
 describe('addResponseInterceptor', () => {
     it('should handle fufilled response', async () => {
         let fufilledFn = jest.fn();
-        let httpClient = new AxiosBuilder()
+        let httpClient = new AxiosDecorator()
             .addResponseInterceptor({
                 onFulfilled(value) {
                     fufilledFn();
@@ -133,7 +133,7 @@ describe('addResponseInterceptor', () => {
 
     it('should handle rejected response', async () => {
         let errorFn = jest.fn();
-        let httpClient = new AxiosBuilder()
+        let httpClient = new AxiosDecorator()
             .addResponseInterceptor({
                 onRejected(error) {
                     errorFn();
@@ -152,7 +152,7 @@ describe('addResponseInterceptor', () => {
 describe('addRequestInterceptor', () => {
     it('should handle fufilled request', async () => {
         let fufilledFn = jest.fn();
-        let httpClient = new AxiosBuilder()
+        let httpClient = new AxiosDecorator()
             .addRequestInterceptor({
                 onFulfilled(value) {
                     fufilledFn();
@@ -169,7 +169,7 @@ describe('addRequestInterceptor', () => {
 
     it('should handle rejected request', async () => {
         let errorFn = jest.fn();
-        let httpClient = new AxiosBuilder()
+        let httpClient = new AxiosDecorator()
             .addRequestInterceptor({
                 onRejected(error) {
                     errorFn();

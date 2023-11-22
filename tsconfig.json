@@ -6,6 +6,6 @@
         "esModuleInterop": true
     },
     "main": "dist/index.ts",
-    "types": "dist/types/AxiosBuilder.ts",
+    "types": "dist/types/AxiosDecorator.ts",
     "exclude": ["**/*.test.ts"]
 }

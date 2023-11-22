@@ -13,7 +13,7 @@ import { AxiosDecoratorClass, Interceptor, RateLimitOptions } from './types/Axio
 /**
  * @classdesc Create and configure an axios instance
  */
-export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
+export class AxiosDecorator implements AxiosDecoratorClass<AxiosDecorator> {
     private axiosInstance: AxiosInstance;
 
     /**
@@ -38,9 +38,9 @@ export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
      * Add a rate limiter interceptor to the axios instance.
      *
      * @param rateLimitConfig Rate limit options specified by axios-rate-limit module
-     * @returns {AxiosBuilder} AxiosBuilder
+     * @returns {AxiosDecorator} AxiosDecorator
      */
-    public addRateLimiter(rateLimitConfig: RateLimitOptions): AxiosBuilder {
+    public addRateLimiter(rateLimitConfig: RateLimitOptions): AxiosDecorator {
         this.axiosInstance = axiosRateLimit(this.axiosInstance, rateLimitConfig);
 
         return this;
@@ -51,9 +51,9 @@ export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
      * Default: Use exponential backoff.
      *
      * @param retryConfig Settings for retrying a request
-     * @returns AxiosBuilder
+     * @returns AxiosDecorator
      */
-    public addRateLimitRetry(retryConfig?: IAxiosRetryConfigExtended): AxiosBuilder {
+    public addRateLimitRetry(retryConfig?: IAxiosRetryConfigExtended): AxiosDecorator {
         const defaultConfig = {
             retryDelay: exponentialDelay,
             retryCondition: (error: AxiosError): boolean | Promise<boolean> => {
@@ -74,7 +74,7 @@ export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
      * Add a new request interceptor
      *
      * @param interceptor Request Interceptor to add to the axios instance
-     * @returns AxiosBuilder
+     * @returns AxiosDecorator
      */
     public addRequestInterceptor(interceptor: Interceptor<InternalAxiosRequestConfig>) {
         this.axiosInstance.interceptors.request.use(
@@ -89,7 +89,7 @@ export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
      * Add a new response interceptor
      *
      * @param interceptor Response Interceptor to add to the axios instance
-     * @returns AxiosBuilder
+     * @returns AxiosDecorator
      */
     public addResponseInterceptor(interceptor: Interceptor<AxiosResponse>) {
         this.axiosInstance.interceptors.response.use(
