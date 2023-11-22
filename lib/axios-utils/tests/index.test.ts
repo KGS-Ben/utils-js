@@ -145,7 +145,7 @@ describe('addResponseInterceptor', () => {
 
         try {
             await httpClient.get('http://test.com');
-            throw Error('HTTP client didn\'t receive an error');
+            throw Error("HTTP client didn't receive an error");
         } catch (_) {
             expect(errorFn).toHaveBeenCalledTimes(1);
         }
@@ -190,7 +190,7 @@ describe('addRequestInterceptor', () => {
 
         try {
             await httpClient.get('http://test.com');
-            throw Error('HTTP client never threw an error')
+            throw Error('HTTP client never threw an error');
         } catch (error) {
             expect(errorFn).toHaveBeenCalledTimes(1);
         }
@@ -202,25 +202,24 @@ describe('addErrorLogReducer', () => {
         nock.cleanAll();
     });
 
-    it.each([
-        [{errors: 'This is an expected error'}],
-        [['This is an expected error']],
-        [{}],
-    ])('should create simplified response error logs', async (errorBody) => {
-        const httpClient = new AxiosDecorator().addErrorLogReducer().getClient();
-        setupResponses(httpClient, [
-            () => nock('http://test.com').get('/').reply(429, errorBody),
-        ]);
+    it.each([[{ errors: 'This is an expected error' }], [['This is an expected error']], [{}]])(
+        'should create simplified response error logs',
+        async errorBody => {
+            const httpClient = new AxiosDecorator().addErrorLogReducer().getClient();
+            setupResponses(httpClient, [
+                () => nock('http://test.com').get('/').reply(429, errorBody),
+            ]);
 
-        try {
-            await httpClient.get('http://test.com');
-            throw Error('HTTP client did not throw an error');
-        } catch (error) {
-            expect(error.status).toEqual(429);
-            expect(error.data).toEqual(errorBody);
-            expect(error.message).toEqual('Request failed with status code 429');
+            try {
+                await httpClient.get('http://test.com');
+                throw Error('HTTP client did not throw an error');
+            } catch (error) {
+                expect(error.status).toEqual(429);
+                expect(error.data).toEqual(errorBody);
+                expect(error.message).toEqual('Request failed with status code 429');
+            }
         }
-    });
+    );
 
     it('should create simplified request error logs', async () => {
         const httpClient = new AxiosDecorator().addErrorLogReducer().getClient();

@@ -105,8 +105,8 @@ export class AxiosDecorator implements AxiosDecoratorClass<AxiosDecorator> {
      *
      * @returns AxiosDecorator
      */
-    public addErrorLogReducer() : AxiosDecorator {
-        const axiosLogReducer = (error : AxiosError) => {
+    public addErrorLogReducer(): AxiosDecorator {
+        const axiosLogReducer = (error: AxiosError) => {
             if (error?.response) {
                 return Promise.reject({
                     status: error.response.status,
