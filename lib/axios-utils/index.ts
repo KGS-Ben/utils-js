@@ -2,22 +2,13 @@ import axios, {
   AxiosError,
   AxiosInstance,
   AxiosRequestConfig,
+  AxiosResponse,
   HttpStatusCode,
+  InternalAxiosRequestConfig,
 } from "axios";
 import axiosRateLimit from "axios-rate-limit";
 import axiosRetry, { IAxiosRetryConfigExtended, exponentialDelay } from "axios-retry";
-
-interface RateLimitOptions {
-  maxRequests?: number;
-  perMilliseconds?: number;
-  maxRPS?: number;
-}
-
-interface AxiosBuilderClass<T> {
-  build: () => AxiosInstance;
-  addRateLimiter: (options: RateLimitOptions) => T;
-  addRateLimitRetry: (options?: IAxiosRetryConfigExtended) => T;
-}
+import { AxiosBuilderClass, Interceptor, RateLimitOptions } from "./types/AxiosBuilder";
 
 /**
  * @classdesc Create and configure an axios instance
@@ -39,12 +30,12 @@ export class AxiosBuilder implements AxiosBuilderClass<AxiosBuilder> {
    *
    * @returns {AxiosInstance} An axios instance with all the configured functionality applied.
    */
-  public build() {
+  public getClient() {
     return this.axiosInstance;
   }
 
   /**
-   * Add a rate limiter intercepter to the axios instance.
+   * Add a rate limiter interceptor to the axios instance.
    *
    * @param rateLimitConfig Rate limit options specified by axios-rate-limit module
    * @returns {AxiosBuilder} AxiosBuilder
@@ -83,6 +74,28 @@ export class AxiosBuilder implements AxiosBuilderClass<AxiosBuilder> {
 
     retryConfig = {...defaultConfig, ...retryConfig};
     axiosRetry(this.axiosInstance, retryConfig);
+    return this;
+  }
+
+  /**
+   * Add a new request interceptor
+   *
+   * @param interceptor Request Interceptor to add to the axios instance
+   * @returns AxiosBuilder
+   */
+  addRequestInterceptor(interceptor: Interceptor<InternalAxiosRequestConfig>) {
+    this.axiosInstance.interceptors.request.use(interceptor.onFulfilled, interceptor.onRejected, interceptor.options);
+    return this;
+  }
+
+  /**
+   * Add a new response interceptor
+   *
+   * @param interceptor Response Interceptor to add to the axios instance
+   * @returns AxiosBuilder
+   */
+  addResponseInterceptor(interceptor: Interceptor<AxiosResponse>) {
+    this.axiosInstance.interceptors.response.use(interceptor.onFulfilled, interceptor.onRejected, interceptor.options);
     return this;
   }
 }

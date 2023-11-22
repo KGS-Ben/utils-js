@@ -4,6 +4,7 @@
   "description": "Commonly used JS actions",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "jest test"
   },
   "repository": {
