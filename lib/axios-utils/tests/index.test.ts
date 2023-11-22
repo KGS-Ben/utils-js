@@ -106,9 +106,8 @@ describe('addRateLimitRetry', () => {
         });
 
         let response = await httpClientBuilder.getClient().get('http://www.test.com/test');
-
         expect(response.status).toBe(200);
-        expect(response.config['axios-retry'].retryCount).toBe(2);
+        expect(response.config['axios-retry']?.retryCount).toBe(2);
         expect(retryCallback).toHaveBeenCalledTimes(2);
     });
 });
@@ -120,7 +119,7 @@ describe('addResponseInterceptor', () => {
             .addResponseInterceptor({
                 onFulfilled(value) {
                     fufilledFn();
-                    return value;
+                    return Promise.resolve(value);
                 },
             })
             .getClient();
@@ -137,15 +136,19 @@ describe('addResponseInterceptor', () => {
             .addResponseInterceptor({
                 onRejected(error) {
                     errorFn();
-                    return error;
+                    return Promise.reject(error);
                 },
             })
             .getClient();
 
         setupResponses(httpClient, [() => nock('http://test.com').get(/.*/).reply(500)]);
 
-        await httpClient.get('http://test.com');
-        expect(errorFn).toHaveBeenCalledTimes(1);
+        try {
+            await httpClient.get('http://test.com');
+            throw Error('HTTP client didn\'t receive an error');
+        } catch (_) {
+            expect(errorFn).toHaveBeenCalledTimes(1);
+        }
     });
 });
 
@@ -156,14 +159,14 @@ describe('addRequestInterceptor', () => {
             .addRequestInterceptor({
                 onFulfilled(value) {
                     fufilledFn();
-                    return value;
+                    return Promise.resolve(value);
                 },
             })
             .getClient();
 
         setupResponses(httpClient, [() => nock('http://test.com').get(/.*/).reply(200)]);
 
-        let response = await httpClient.get('http://test.com');
+        await httpClient.get('http://test.com');
         expect(fufilledFn).toHaveBeenCalledTimes(1);
     });
 
@@ -178,7 +181,7 @@ describe('addRequestInterceptor', () => {
             })
             .addRequestInterceptor({
                 onFulfilled(value) {
-                    throw Error('Reject');
+                    throw Error('Some invalid error');
                 },
             })
             .getClient();
@@ -187,6 +190,7 @@ describe('addRequestInterceptor', () => {
 
         try {
             await httpClient.get('http://test.com');
+            throw Error('HTTP client never threw an error')
         } catch (error) {
             expect(errorFn).toHaveBeenCalledTimes(1);
         }
