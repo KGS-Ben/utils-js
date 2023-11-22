@@ -3,11 +3,9 @@
     "compilerOptions": {
         "outDir": "dist",
         "sourceMap": true,
-        "esModuleInterop": true,
+        "esModuleInterop": true
     },
     "main": "dist/index.ts",
     "types": "dist/types/AxiosBuilder.ts",
-    "exclude": [
-        "**/*.test.ts"
-    ]
+    "exclude": ["**/*.test.ts"]
 }
