@@ -18,7 +18,7 @@ export interface RateLimitOptions {
     maxRPS?: number;
 }
 
-export interface AxiosBuilderClass<T> {
+export interface AxiosDecoratorClass<T> {
     getClient: () => AxiosInstance;
     addRequestInterceptor: (interceptor: Interceptor<InternalAxiosRequestConfig>) => T;
     addResponseInterceptor: (interceptor: Interceptor<AxiosResponse>) => T;

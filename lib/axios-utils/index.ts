@@ -8,12 +8,12 @@ import axios, {
 } from 'axios';
 import axiosRateLimit from 'axios-rate-limit';
 import axiosRetry, { IAxiosRetryConfigExtended, exponentialDelay } from 'axios-retry';
-import { AxiosBuilderClass, Interceptor, RateLimitOptions } from './types/AxiosBuilder';
+import { AxiosDecoratorClass, Interceptor, RateLimitOptions } from './types/AxiosDecorator';
 
 /**
  * @classdesc Create and configure an axios instance
  */
-export class AxiosBuilder implements AxiosBuilderClass<AxiosBuilder> {
+export class AxiosBuilder implements AxiosDecoratorClass<AxiosBuilder> {
     private axiosInstance: AxiosInstance;
 
     /**
