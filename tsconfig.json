@@ -1,0 +1,11 @@
+{
+    "declaration": true,
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": true,
+        "esModuleInterop": true
+    },
+    "main": "dist/index.ts",
+    "types": "dist/types/AxiosDecorator.ts",
+    "exclude": ["**/*.test.ts"]
+}
