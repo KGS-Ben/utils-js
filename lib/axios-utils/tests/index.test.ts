@@ -2,6 +2,10 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse, HttpStatusCode } from 
 import nock from 'nock';
 import { AxiosDecorator } from '../index';
 
+afterEach(() => {
+    nock.cleanAll();
+});
+
 /**
  * Mock http requests with a list of responses.
  *
@@ -43,10 +47,6 @@ describe('getClient', () => {
 });
 
 describe('addRateLimiter', () => {
-    afterEach(() => {
-        nock.cleanAll();
-    });
-
     it('should throttle the number of requests over a time period', async () => {
         const totalRequests = 4;
         const rateLimitOptions = Object.freeze({
@@ -78,9 +78,6 @@ describe('addRateLimiter', () => {
 });
 
 describe('addRateLimitRetry', () => {
-    afterEach(() => {
-        nock.cleanAll();
-    });
 
     it('should retry a request if Rate limit reached (TooManyRequests)', async () => {
         const retryCallback = jest.fn();
@@ -113,6 +110,7 @@ describe('addRateLimitRetry', () => {
 });
 
 describe('addResponseInterceptor', () => {
+
     it('should handle fufilled response', async () => {
         let fufilledFn = jest.fn();
         let httpClient = new AxiosDecorator()
@@ -198,10 +196,6 @@ describe('addRequestInterceptor', () => {
 });
 
 describe('addErrorLogReducer', () => {
-    afterEach(() => {
-        nock.cleanAll();
-    });
-
     it.each([[{ errors: 'This is an expected error' }], [['This is an expected error']], [{}]])(
         'should create simplified response error logs',
         async errorBody => {
