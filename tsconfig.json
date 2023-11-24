@@ -1,10 +1,13 @@
 {
     "declaration": true,
     "compilerOptions": {
+        "rootDir": "lib",
         "outDir": "dist",
         "sourceMap": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "paths": {
+            "@kgs-axios": ["./dist/axios-utils"]
+        }
     },
-    "types": "dist/types/AxiosDecorator.ts",
     "exclude": ["**/*.test.ts"]
 }
