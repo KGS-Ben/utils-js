@@ -78,7 +78,6 @@ describe('addRateLimiter', () => {
 });
 
 describe('addRateLimitRetry', () => {
-
     it('should retry a request if Rate limit reached (TooManyRequests)', async () => {
         const retryCallback = jest.fn();
         const httpClientBuilder = new AxiosDecorator({
@@ -110,7 +109,6 @@ describe('addRateLimitRetry', () => {
 });
 
 describe('addResponseInterceptor', () => {
-
     it('should handle fufilled response', async () => {
         let fufilledFn = jest.fn();
         let httpClient = new AxiosDecorator()
