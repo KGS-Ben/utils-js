@@ -1,7 +1,6 @@
 {
     "declaration": true,
     "compilerOptions": {
-        "rootDir": "lib",
         "outDir": "dist",
         "sourceMap": true,
         "esModuleInterop": true,
