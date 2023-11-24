@@ -24,4 +24,5 @@ export interface AxiosDecoratorClass<T> {
     addResponseInterceptor: (interceptor: Interceptor<AxiosResponse>) => T;
     addRateLimiter: (options: RateLimitOptions) => T;
     addRateLimitRetry: (options?: IAxiosRetryConfigExtended) => T;
+    addErrorLogReducer: () => T;
 }

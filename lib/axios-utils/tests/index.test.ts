@@ -2,6 +2,10 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse, HttpStatusCode } from 
 import nock from 'nock';
 import { AxiosDecorator } from '../index';
 
+afterEach(() => {
+    nock.cleanAll();
+});
+
 /**
  * Mock http requests with a list of responses.
  *
@@ -43,10 +47,6 @@ describe('getClient', () => {
 });
 
 describe('addRateLimiter', () => {
-    afterEach(() => {
-        nock.cleanAll();
-    });
-
     it('should throttle the number of requests over a time period', async () => {
         const totalRequests = 4;
         const rateLimitOptions = Object.freeze({
@@ -78,9 +78,6 @@ describe('addRateLimiter', () => {
 });
 
 describe('addRateLimitRetry', () => {
-    afterEach(() => {
-        nock.cleanAll();
-    });
 
     it('should retry a request if Rate limit reached (TooManyRequests)', async () => {
         const retryCallback = jest.fn();
@@ -106,21 +103,21 @@ describe('addRateLimitRetry', () => {
         });
 
         let response = await httpClientBuilder.getClient().get('http://www.test.com/test');
-
         expect(response.status).toBe(200);
-        expect(response.config['axios-retry'].retryCount).toBe(2);
+        expect(response.config['axios-retry']?.retryCount).toBe(2);
         expect(retryCallback).toHaveBeenCalledTimes(2);
     });
 });
 
 describe('addResponseInterceptor', () => {
+
     it('should handle fufilled response', async () => {
         let fufilledFn = jest.fn();
         let httpClient = new AxiosDecorator()
             .addResponseInterceptor({
                 onFulfilled(value) {
                     fufilledFn();
-                    return value;
+                    return Promise.resolve(value);
                 },
             })
             .getClient();
@@ -137,15 +134,19 @@ describe('addResponseInterceptor', () => {
             .addResponseInterceptor({
                 onRejected(error) {
                     errorFn();
-                    return error;
+                    return Promise.reject(error);
                 },
             })
             .getClient();
 
         setupResponses(httpClient, [() => nock('http://test.com').get(/.*/).reply(500)]);
 
-        await httpClient.get('http://test.com');
-        expect(errorFn).toHaveBeenCalledTimes(1);
+        try {
+            await httpClient.get('http://test.com');
+            throw Error("HTTP client didn't receive an error");
+        } catch (_) {
+            expect(errorFn).toHaveBeenCalledTimes(1);
+        }
     });
 });
 
@@ -156,14 +157,14 @@ describe('addRequestInterceptor', () => {
             .addRequestInterceptor({
                 onFulfilled(value) {
                     fufilledFn();
-                    return value;
+                    return Promise.resolve(value);
                 },
             })
             .getClient();
 
         setupResponses(httpClient, [() => nock('http://test.com').get(/.*/).reply(200)]);
 
-        let response = await httpClient.get('http://test.com');
+        await httpClient.get('http://test.com');
         expect(fufilledFn).toHaveBeenCalledTimes(1);
     });
 
@@ -178,7 +179,7 @@ describe('addRequestInterceptor', () => {
             })
             .addRequestInterceptor({
                 onFulfilled(value) {
-                    throw Error('Reject');
+                    throw Error('Some invalid error');
                 },
             })
             .getClient();
@@ -187,8 +188,44 @@ describe('addRequestInterceptor', () => {
 
         try {
             await httpClient.get('http://test.com');
+            throw Error('HTTP client never threw an error');
         } catch (error) {
             expect(errorFn).toHaveBeenCalledTimes(1);
+        }
+    });
+});
+
+describe('addErrorLogReducer', () => {
+    it.each([[{ errors: 'This is an expected error' }], [['This is an expected error']], [{}]])(
+        'should create simplified response error logs',
+        async errorBody => {
+            const httpClient = new AxiosDecorator().addErrorLogReducer().getClient();
+            setupResponses(httpClient, [
+                () => nock('http://test.com').get('/').reply(429, errorBody),
+            ]);
+
+            try {
+                await httpClient.get('http://test.com');
+                throw Error('HTTP client did not throw an error');
+            } catch (error) {
+                expect(error.status).toEqual(429);
+                expect(error.data).toEqual(errorBody);
+                expect(error.message).toEqual('Request failed with status code 429');
+            }
+        }
+    );
+
+    it('should create simplified request error logs', async () => {
+        const httpClient = new AxiosDecorator().addErrorLogReducer().getClient();
+        setupResponses(httpClient, [
+            () => nock('http://test.com').get('/').replyWithError('This is an error'),
+        ]);
+
+        try {
+            await httpClient.get('http://test.com');
+            throw Error('HTTP client did not throw an error');
+        } catch (error) {
+            expect(error.message).toEqual('This is an error');
         }
     });
 });
