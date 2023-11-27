@@ -1,4 +1,4 @@
-import { GetUserDataNoAuth, GetUserDataWithAuth, SendTwoFactorEmail, TwoFactorRequest, User, ValidateTwoFactorCode } from '../types/strategies';
+import { GetUserByUsername, GetUserDataWithAuth, SendTwoFactorEmail, TwoFactorRequest, User, ValidateTwoFactorCode } from '../types/strategies';
 import { verifyAccessToken, verifyUserLogin } from '../strategies';
 import { HttpStatusCode } from 'axios';
 
@@ -11,15 +11,15 @@ const testUser : User = {
 };
 
 describe('verifyAccessToken', () => {
-    const getValidUserNoAuth : GetUserDataNoAuth = jest.fn(() => {
+    const getValidUserNoAuth : GetUserByUsername = jest.fn(() => {
         return Promise.resolve(testUser);
     });
     //@ts-ignore
-    const getInvalidUserNoAuthEmptyObj : GetUserDataNoAuth = jest.fn(() => {
+    const getInvalidUserNoAuthEmptyObj : GetUserByUsername = jest.fn(() => {
         return Promise.resolve({});
     });
     //@ts-ignore
-    const getInvalidUserNoAuthNullReturn : GetUserDataNoAuth = jest.fn(() => {
+    const getInvalidUserNoAuthNullReturn : GetUserByUsername = jest.fn(() => {
         return Promise.resolve(null);
     });
 
