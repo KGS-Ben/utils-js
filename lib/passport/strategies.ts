@@ -1,4 +1,12 @@
-import { GetUserByUsername, GetUserDataWithAuth, TwoFactorRequest, ValidateTwoFactorCode, SendTwoFactorEmail, VerifyUserLogin, VerifyAccessToken } from './types/strategies';
+import {
+    GetUserByUsername,
+    GetUserDataWithAuth,
+    TwoFactorRequest,
+    ValidateTwoFactorCode,
+    SendTwoFactorEmail,
+    VerifyUserLogin,
+    VerifyAccessToken,
+} from './types/strategies';
 import { Authenticator } from 'passport';
 import LocalStrategy from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
@@ -12,8 +20,17 @@ import { HttpStatusCode } from 'axios';
  * @param password User's password
  * @param done Passport VerifiedCallback, called when function is completed
  */
-export function verifyUserLogin (req : TwoFactorRequest, username : string, password : string, done : VerifiedCallback) : VerifyUserLogin{
-    return async (authenticateUser : GetUserDataWithAuth, validateTwoFactor : ValidateTwoFactorCode, sendTwoFactorEmail : SendTwoFactorEmail) : Promise<void> => {
+export function verifyUserLogin(
+    req: TwoFactorRequest,
+    username: string,
+    password: string,
+    done: VerifiedCallback
+): VerifyUserLogin {
+    return async (
+        authenticateUser: GetUserDataWithAuth,
+        validateTwoFactor: ValidateTwoFactorCode,
+        sendTwoFactorEmail: SendTwoFactorEmail
+    ): Promise<void> => {
         try {
             let user = await authenticateUser(username, password);
 
@@ -43,7 +60,7 @@ export function verifyUserLogin (req : TwoFactorRequest, username : string, pass
         } catch (error) {
             return done(error, false);
         }
-    }
+    };
 }
 
 /**
@@ -52,30 +69,30 @@ export function verifyUserLogin (req : TwoFactorRequest, username : string, pass
  * @param payload Parsed data from JwtStrategy
  * @param done Passport callback called upon completion
  */
-export function verifyAccessToken(payload : any, done : VerifiedCallback) : VerifyAccessToken{
-    return async (getUser : GetUserByUsername) : Promise<void>  => {
+export function verifyAccessToken(payload: any, done: VerifiedCallback): VerifyAccessToken {
+    return async (getUser: GetUserByUsername): Promise<void> => {
         try {
             let user = await getUser(payload.username);
-    
+
             if (!user) {
                 return null;
             }
-    
+
             if (user.password !== payload.password) {
                 throw Error('Failed to authenticate');
             }
-    
+
             done(null, user);
         } catch (error) {
             done(error, false);
         }
-    }
+    };
 }
 
 /**
  * Registers a function to serialize user objects into the session.
  */
-export function applySerializeUser(passport : Authenticator) {
+export function applySerializeUser(passport: Authenticator) {
     passport.serializeUser(function (user, done) {
         done(null, user);
     });
@@ -85,7 +102,11 @@ export function applySerializeUser(passport : Authenticator) {
  * Adds action to validate an access token.
  * Expects header as: Authorization: "JWT <TOKEN_HERE>"
  */
-export function applyAccessTokenValidation(passport : Authenticator, accessTokenSecret : string, getUser : GetUserByUsername) {
+export function applyAccessTokenValidation(
+    passport: Authenticator,
+    accessTokenSecret: string,
+    getUser: GetUserByUsername
+) {
     passport.use(
         'jwt',
         new JwtStrategy(
@@ -102,11 +123,23 @@ export function applyAccessTokenValidation(passport : Authenticator, accessToken
  * Action to perform user logs in.
  * username and password should be in body as form-data.
  */
-export function applyUserLogin(passport : Authenticator, authenticateUser : GetUserDataWithAuth, validateTwoFactor : ValidateTwoFactorCode, sendTwoFactorEmail : SendTwoFactorEmail) {
+export function applyUserLogin(
+    passport: Authenticator,
+    authenticateUser: GetUserDataWithAuth,
+    validateTwoFactor: ValidateTwoFactorCode,
+    sendTwoFactorEmail: SendTwoFactorEmail
+) {
     passport.use(
-        new LocalStrategy({ passReqToCallback: true },
-        (req: TwoFactorRequest, username: string, password: string, done: VerifiedCallback) => { 
-            return verifyUserLogin(req, username, password, done)(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
-        })
+        new LocalStrategy(
+            { passReqToCallback: true },
+            (req: TwoFactorRequest, username: string, password: string, done: VerifiedCallback) => {
+                return verifyUserLogin(
+                    req,
+                    username,
+                    password,
+                    done
+                )(authenticateUser, validateTwoFactor, sendTwoFactorEmail);
+            }
+        )
     );
 }

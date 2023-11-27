@@ -3,5 +3,5 @@ import { PassportDecorator } from './lib/passport/PassportDecorator';
 
 module.exports = {
     AxiosDecorator,
-    PassportDecorator
+    PassportDecorator,
 };
