@@ -1,124 +1,24 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-const userAuth = require('../api/userAuth.js');
-const { getUser, generateAndSend2FAToken } = require('../api/usersApi.js');
-require('dotenv').config();
-const twofactor = require('node-2fa');
+import { GetUserDataNoAuth, GetUserDataWithAuth, TwoFactorRequest, ValidateTwoFactorCode, SendTwoFactorEmail, VerifyUserLogin, VerifyAccessToken } from './types/strategies';
+import { PassportStatic } from 'passport';
+import LocalStrategy from 'passport-local';
+import { Strategy as JwtStrategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
+import { HttpStatusCode } from 'axios';
 
 /**
- * Process the logged in user and retrieve necessary data.
+ * Verify a user's login and apply two factor authentication.
+ *
+ * @param req A request made by a user to login
+ * @param username User's username
+ * @param password User's password
+ * @param done Passport VerifiedCallback, called when function is completed
  */
-passport.serializeUser(function (user, done) {
-    done(null, user);
-});
-
-/**
- * Action to perform when validating a generic JWT's payload.
- * Expects header as: Authorization: "JWT <TOKEN_HERE>"
- */
-passport.use(
-    'jwt',
-    new JwtStrategy(
-        {
-            secretOrKey: process.env.ACCESS_TOKEN_SECRET,
-            jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-        },
-        async (payload, done) => {
-            try {
-                let user = await getUser(payload.username);
-
-                if (!user) {
-                    return null;
-                }
-
-                if (user.password !== payload.password) {
-                    throw Error('Failed to authenticate');
-                }
-                done(null, user);
-            } catch (error) {
-                done(error, false);
-            }
-        }
-    )
-);
-
-/**
- * Validates an admin's access token
- * Expects header as: Authorization: "JWT <TOKEN_HERE>"
- */
-passport.use(
-    'isAdmin',
-    new JwtStrategy(
-        {
-            secretOrKey: process.env.ACCESS_TOKEN_SECRET,
-            jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-        },
-        async (payload, done) => {
-            try {
-                let user = await getUser(payload.username);
-
-                if (!user) {
-                    throw Error('Failed to authenticate');
-                }
-
-                if (!user.roles.includes('Admin')) {
-                    done(Error('Unauthorized Access'), false);
-                }
-                done(null, user);
-            } catch (error) {
-                done(error, false);
-            }
-        }
-    )
-);
-
-/**
- * Validates a manager's access token
- * Expects header as: Authorization: "JWT <TOKEN_HERE>"
- */
-passport.use(
-    'isManager',
-    new JwtStrategy(
-        {
-            secretOrKey: process.env.ACCESS_TOKEN_SECRET,
-            jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-        },
-        async (payload, done) => {
-            try {
-                let user = await getUser(payload.username);
-
-                if (!user) {
-                    throw Error('Failed to authenticate');
-                }
-                // allow admins to have manager access
-                if (!user.roles.includes('Manager') && !user.roles.includes('Admin')) {
-                    done(Error('Unauthorized Access'), false);
-                }
-                done(null, user);
-            } catch (error) {
-                done(error, false);
-            }
-        }
-    )
-);
-
-/**
- * Action to perform user logs in.
- * username and password should be in body as form-data.
- */
-passport.use(
-    new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
+export function verifyUserLogin (req : TwoFactorRequest, username : string, password : string, done : VerifiedCallback) : VerifyUserLogin{
+    return async (authenticateUser : GetUserDataWithAuth, validateTwoFactor : ValidateTwoFactorCode, sendTwoFactorEmail : SendTwoFactorEmail) : Promise<void> => {
         try {
-            let user = await userAuth.authUser({
-                username,
-                password,
-            });
+            let user = await authenticateUser(username, password);
 
-            // if user not found in database
             if (!user || Object.keys(user).length === 0) {
-                req.authStatus = 401;
+                req.authStatus = HttpStatusCode.Unauthorized;
                 return done(Error('User not found'), false);
             }
 
@@ -126,24 +26,82 @@ passport.use(
                 return done(null, user);
             }
 
-            // ensure 2fa token is valid timewise
+            // Validate token
             let date = new Date();
             if (user.tokenExpire > date && req.body.twoFACode) {
-                let comparison = await twofactor.verifyToken(user.secret2FA, req.body.twoFACode);
-                if (comparison != null) {
-                    req.authStatus = 200;
+                const isValid = await validateTwoFactor(user.secret2FA, req.body.twoFACode);
+                if (isValid) {
+                    req.authStatus = HttpStatusCode.Ok;
                     return done(null, user);
                 }
             }
 
             // send new 2FA token
-            await generateAndSend2FAToken(user);
-            req.authStatus = 203;
+            await sendTwoFactorEmail(user);
+            req.authStatus = HttpStatusCode.NonAuthoritativeInformation;
             return done(null, user);
         } catch (error) {
             return done(error, false);
         }
-    })
-);
+    }
+}
 
-module.exports = passport;
+/**
+ * Verify a user's access token.
+ *
+ * @param payload Parsed data from JwtStrategy
+ * @param done Passport callback called upon completion
+ */
+export function verifyAccessToken(payload : any, done : VerifiedCallback) : VerifyAccessToken{
+    return async (getUser : GetUserDataNoAuth) : Promise<void>  => {
+        try {
+            let user = await getUser(payload.username);
+    
+            if (!user) {
+                return null;
+            }
+    
+            if (user.password !== payload.password) {
+                throw Error('Failed to authenticate');
+            }
+    
+            done(null, user);
+        } catch (error) {
+            done(error, false);
+        }
+    }
+}
+
+/**
+ * Registers a function to serialize user objects into the session.
+ */
+export function applySerializeUser(passport : PassportStatic) {
+    passport.serializeUser(function (user, done) {
+        done(null, user);
+    });
+}
+
+/**
+ * Adds action to validate an access token.
+ * Expects header as: Authorization: "JWT <TOKEN_HERE>"
+ */
+export function applyAccessTokenValidation(passport : PassportStatic, accessTokenSecret : string) {
+    passport.use(
+        'jwt',
+        new JwtStrategy(
+            {
+                secretOrKey: accessTokenSecret,
+                jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+            },
+            (payload, done) => verifyAccessToken(payload, done)
+        )
+    );
+}
+
+/**
+ * Action to perform user logs in.
+ * username and password should be in body as form-data.
+ */
+export function applyUserLogin(passport : PassportStatic) {
+    passport.use(new LocalStrategy({ passReqToCallback: true }, verifyUserLogin));
+}
