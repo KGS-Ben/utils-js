@@ -22,9 +22,7 @@ export function validateBody(bodyKeys: Array<string>): (Request, Response, NextF
                 }
             }
 
-            if (next) {
-                next();
-            }
+            return next();
         } catch (error) {
             res.status(HttpStatusCode.UnprocessableEntity).send(error.message);
         }
