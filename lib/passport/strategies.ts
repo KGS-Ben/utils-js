@@ -19,6 +19,7 @@ import { HttpStatusCode } from 'axios';
  * @param username User's username
  * @param password User's password
  * @param done Passport VerifiedCallback, called when function is completed
+ * @returns {VerifyUserLogin} Function that validates a user during login
  */
 export function verifyUserLogin(
     req: TwoFactorRequest,
@@ -68,6 +69,7 @@ export function verifyUserLogin(
  *
  * @param payload Parsed data from JwtStrategy
  * @param done Passport callback called upon completion
+ * @returns {VerifyAccessToken} Function that validates a request's access token
  */
 export function verifyAccessToken(payload: any, done: VerifiedCallback): VerifyAccessToken {
     return async (getUser: GetUserByUsername): Promise<void> => {
@@ -99,8 +101,13 @@ export function applySerializeUser(passport: Authenticator) {
 }
 
 /**
- * Adds action to validate an access token.
+ * Add a strategy that validates a request's access token.
  * Expects header as: Authorization: "JWT <TOKEN_HERE>"
+ *
+ * @param passport A passport instance to apply a strategy to
+ * @param accessTokenSecret Access Token Secret to validate with
+ * @param getUser Function to retrieve a user's access token data
+ * @returns {PassportDecorator} this PassportDecorator
  */
 export function applyAccessTokenValidation(
     passport: Authenticator,
@@ -119,9 +126,15 @@ export function applyAccessTokenValidation(
     );
 }
 
+
 /**
- * Action to perform user logs in.
- * username and password should be in body as form-data.
+ * Add a strategy to login a user and check/send 2FA codes.
+ *
+ * @param passport A passport instance to apply a strategy to
+ * @param authenticateUser Function to authenticate a user
+ * @param validateTwoFactor Function to validate a 2FA code
+ * @param sendTwoFactorEmail Function to send a 2FA email
+ * @returns {PassportDecorator} this PassportDecorator
  */
 export function applyUserLogin(
     passport: Authenticator,
