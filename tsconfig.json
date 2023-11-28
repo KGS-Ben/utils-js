@@ -3,9 +3,10 @@
     "compilerOptions": {
         "outDir": "dist",
         "sourceMap": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "paths": {
+            "@kgs-axios": ["./dist/axios-utils"]
+        }
     },
-    "main": "dist/index.ts",
-    "types": "dist/types/AxiosDecorator.ts",
     "exclude": ["**/*.test.ts"]
 }
