@@ -126,7 +126,6 @@ export function applyAccessTokenValidation(
     );
 }
 
-
 /**
  * Add a strategy to login a user and check/send 2FA codes.
  *

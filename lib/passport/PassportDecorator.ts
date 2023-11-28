@@ -7,6 +7,16 @@ import {
     ValidateTwoFactorCode,
 } from './types/strategies';
 
+/**
+ * @classdesc Create and customize a passport instance
+ * @example <caption>Create a decorated passport instance</caption>
+ * const { PassportDecorator } = require('utils')
+ * const passport = new PassportDecorator()
+ *   .addSerializeUser()
+ *   .addAccessTokenValidation(secret, getUser)
+ *   .addUserValidation(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
+ *   .getPassport();
+ */
 export class PassportDecorator {
     passportInstance: Authenticator;
 
