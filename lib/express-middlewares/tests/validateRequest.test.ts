@@ -3,11 +3,11 @@ import { validateBody, validateQuery } from '../validateRequest';
 import { Request, Response } from 'express';
 
 describe('validateBody', () => {
-    let mockResponse : Partial<Response>;
+    let mockResponse: Partial<Response>;
 
     beforeEach(() => {
         mockResponse = {
-            status: jest.fn((code : number) : Response => mockResponse as Response),
+            status: jest.fn((code: number): Response => mockResponse as Response),
             send: jest.fn(),
         };
     });
@@ -21,7 +21,7 @@ describe('validateBody', () => {
             send: jest.fn(),
         };
 
-        const mockRequest : Partial<Request> = {};
+        const mockRequest: Partial<Request> = {};
         const nextFn = jest.fn();
         validateBody([])(mockRequest as Request, mockResponse as Response, nextFn);
         expect(nextFn).not.toHaveBeenCalled();
@@ -36,7 +36,7 @@ describe('validateBody', () => {
             }),
             send: jest.fn(),
         };
-        const mockRequest : Partial<Request>= {
+        const mockRequest: Partial<Request> = {
             body: {
                 test: 'test',
             },
@@ -49,7 +49,7 @@ describe('validateBody', () => {
     });
 
     it('should find keys in body', () => {
-        const mockRequest : Partial<Request> = {
+        const mockRequest: Partial<Request> = {
             body: {
                 keyToCheck1: 'test',
                 keyToCheck2: 'test',
@@ -57,7 +57,11 @@ describe('validateBody', () => {
         };
 
         const nextFn = jest.fn();
-        validateBody(['keyToCheck1', 'keyToCheck2'])(mockRequest as Request, mockResponse as Response, nextFn);
+        validateBody(['keyToCheck1', 'keyToCheck2'])(
+            mockRequest as Request,
+            mockResponse as Response,
+            nextFn
+        );
         expect(nextFn).toHaveBeenCalled();
     });
 
@@ -69,7 +73,11 @@ describe('validateBody', () => {
         };
 
         const nextFn = jest.fn();
-        validateBody(['keyToCheck1', 'keyToCheck2'])(mockRequest as Request, mockResponse as Response, nextFn);
+        validateBody(['keyToCheck1', 'keyToCheck2'])(
+            mockRequest as Request,
+            mockResponse as Response,
+            nextFn
+        );
         expect(nextFn).not.toHaveBeenCalled();
         expect(mockResponse.send).toHaveBeenCalled();
     });
@@ -105,7 +113,7 @@ describe('validateQuery', () => {
             send: jest.fn(),
         };
 
-        const mockRequest : Partial<Request> = {};
+        const mockRequest: Partial<Request> = {};
         const nextFn = jest.fn();
         validateQuery([])(mockRequest as Request, mockResponse as Response, nextFn);
         expect(nextFn).not.toHaveBeenCalled();
@@ -120,7 +128,7 @@ describe('validateQuery', () => {
             }),
             send: jest.fn(),
         };
-        const mockRequest : Partial<Request> = {
+        const mockRequest: Partial<Request> = {
             query: {
                 test: 'test',
             },
@@ -133,8 +141,7 @@ describe('validateQuery', () => {
     });
 
     it('should find keys in query', () => {
-        const mockRequest : Partial<Request> = {
-
+        const mockRequest: Partial<Request> = {
             query: {
                 keyToCheck1: 'test',
                 keyToCheck2: 'test',
@@ -142,27 +149,33 @@ describe('validateQuery', () => {
         };
 
         const nextFn = jest.fn();
-        validateQuery(['keyToCheck1', 'keyToCheck2'])(mockRequest as Request, mockResponse as Response, nextFn);
+        validateQuery(['keyToCheck1', 'keyToCheck2'])(
+            mockRequest as Request,
+            mockResponse as Response,
+            nextFn
+        );
         expect(nextFn).toHaveBeenCalled();
     });
 
     it('should not be valid if not all keys exist in body', () => {
-        const mockRequest : Partial<Request> = {
-
+        const mockRequest: Partial<Request> = {
             query: {
                 keyToCheck1: 'test',
             },
         };
 
         const nextFn = jest.fn();
-        validateQuery(['keyToCheck1', 'keyToCheck2'])(mockRequest as Request, mockResponse as Response, nextFn);
+        validateQuery(['keyToCheck1', 'keyToCheck2'])(
+            mockRequest as Request,
+            mockResponse as Response,
+            nextFn
+        );
         expect(nextFn).not.toHaveBeenCalled();
         expect(mockResponse.send).toHaveBeenCalled();
     });
 
     it('should call the callback/next function', () => {
-        const mockRequest : Partial<Request> = {
-
+        const mockRequest: Partial<Request> = {
             query: {
                 keyToCheck: 'test',
             },
