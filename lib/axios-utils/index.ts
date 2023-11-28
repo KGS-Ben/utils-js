@@ -10,6 +10,8 @@ import axiosRateLimit from 'axios-rate-limit';
 import axiosRetry, { IAxiosRetryConfigExtended, exponentialDelay } from 'axios-retry';
 import { AxiosDecoratorClass, Interceptor, RateLimitOptions } from './types/AxiosDecorator';
 
+export * from './types/AxiosDecorator';
+
 /**
  * @classdesc Create and configure an axios instance
  * @example <caption>Create a custom axios instance</caption>

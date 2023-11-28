@@ -7,6 +7,8 @@ import {
     ValidateTwoFactorCode,
 } from './types/strategies';
 
+export * from './types/strategies';
+
 /**
  * @classdesc Create and customize a passport instance
  * @example <caption>Create a decorated passport instance</caption>
@@ -38,9 +40,9 @@ export class PassportDecorator {
     /**
      * Add a strategy to login a user and check/send 2FA codes.
      *
-     * @param authenticateUser Function to authenticate a user
-     * @param validateTwoFactor Function to validate a 2FA code
-     * @param sendTwoFactorEmail Function to send a 2FA email
+     * @param {GetUserDataWithAuth} authenticateUser Function to authenticate a user
+     * @param {ValidateTwoFactorCode} validateTwoFactor Function to validate a 2FA code
+     * @param {SendTwoFactorEmail} sendTwoFactorEmail Function to send a 2FA email
      * @returns {PassportDecorator} this PassportDecorator
      */
     addUserLogin(
@@ -61,8 +63,8 @@ export class PassportDecorator {
      * Add a strategy that validates a request's access token.
      * Expects header as: Authorization: "JWT <TOKEN_HERE>"
      *
-     * @param accessTokenSecret Access Token Secret to validate with
-     * @param getUser Function to retrieve a user's access token data
+     * @param {string} accessTokenSecret Access Token Secret to validate with
+     * @param {GetUserByUsername} getUser Function to retrieve a user's access token data
      * @returns {PassportDecorator} this PassportDecorator
      */
     addAccessTokenValidation(
