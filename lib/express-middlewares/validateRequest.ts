@@ -3,13 +3,14 @@
  */
 import { HttpStatusCode } from 'axios';
 import { Response, Request, NextFunction } from 'express';
+import { ExpressMiddleWare } from './types/validateRequests';
 
 /**
  * Middleware validation on request.body parameters.
  *
  * @param bodyKeys List of keys that should appear in request.body
  */
-export function validateBody(bodyKeys: Array<string>): (Request, Response, NextFunction) => void {
+export function validateBody(bodyKeys: Array<string>): ExpressMiddleWare {
     return function (req: Request, res: Response, next: NextFunction): void {
         try {
             if (!req.body) {
@@ -34,7 +35,7 @@ export function validateBody(bodyKeys: Array<string>): (Request, Response, NextF
  *
  * @param queryKeys Keys that should appear in request.query
  */
-export function validateQuery(queryKeys: Array<string>) {
+export function validateQuery(queryKeys: Array<string>) : ExpressMiddleWare {
     return function (req: Request, res: Response, next: NextFunction) {
         try {
             if (!req.query) {

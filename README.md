@@ -31,6 +31,15 @@ const passport = new PassportDecorator()
   .getPassport();
 ```
 
+## express-middlewares
+```js
+const { expressMiddlewares } = require('utils');
+// POST /api/save
+router.post('/api/save', expressMiddlewares.validateBody(['keyToCheck1', 'keyToCheck2']), (req, res) => res.send('OK'))
+
+// GET /api/save?queryParam1=123&queryParam2=456
+router.get('/api/save', expressMiddlewares.validateQuery(['queryParam1', 'queryParam2']), (req, res) => res.send('OK'))
+```
 
 ## Module exports
 
