@@ -4,9 +4,15 @@
         "outDir": "dist",
         "sourceMap": true,
         "esModuleInterop": true,
-        "paths": {
-            "@kgs-axios": ["./dist/axios-utils"]
-        }
+        "typeRoots": [
+            "./node_modules/@types",
+            "**/*/types",
+        ],
+        "declaration": true
     },
-    "exclude": ["**/*.test.ts"]
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.test.ts"
+    ]
 }
