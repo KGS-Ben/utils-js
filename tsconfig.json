@@ -10,6 +10,6 @@
         "declaration": true,
         "strict": true
     },
-    "include": ["index.ts", "dist/**/*.ts", "**/*/types"],
+    "include": ["index.ts", "lib/**/*.ts", "**/*/types"],
     "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
