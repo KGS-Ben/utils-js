@@ -2,7 +2,7 @@ import { AxiosDecorator } from './lib/axios-utils';
 import { PassportDecorator } from './lib/passport';
 import { validateBody, validateQuery } from './lib/express-middlewares/validateRequest';
 
-module.exports = {
+export default {
     AxiosDecorator,
     PassportDecorator,
     expressMiddlewares: {
