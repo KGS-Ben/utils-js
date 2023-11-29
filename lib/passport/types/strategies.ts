@@ -1,4 +1,5 @@
-export interface TwoFactorRequest extends Partial<Express.Request> {
+import { Request } from 'express';
+export interface TwoFactorRequest extends Partial<Request> {
     authStatus: number | undefined;
     body: {
         twoFACode: string;

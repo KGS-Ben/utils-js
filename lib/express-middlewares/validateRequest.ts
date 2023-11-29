@@ -24,7 +24,7 @@ export function validateBody(bodyKeys: Array<string>): ExpressMiddleWare {
             }
 
             return next();
-        } catch (error) {
+        } catch (error: any) {
             res.status(HttpStatusCode.UnprocessableEntity).send(error.message);
         }
     };
@@ -35,7 +35,7 @@ export function validateBody(bodyKeys: Array<string>): ExpressMiddleWare {
  *
  * @param queryKeys Keys that should appear in request.query
  */
-export function validateQuery(queryKeys: Array<string>) : ExpressMiddleWare {
+export function validateQuery(queryKeys: Array<string>): ExpressMiddleWare {
     return function (req: Request, res: Response, next: NextFunction) {
         try {
             if (!req.query) {
@@ -48,7 +48,7 @@ export function validateQuery(queryKeys: Array<string>) : ExpressMiddleWare {
                 }
             }
             next();
-        } catch (error) {
+        } catch (error: any) {
             res.status(HttpStatusCode.UnprocessableEntity).send(error.message);
         }
     };

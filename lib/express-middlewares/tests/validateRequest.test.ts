@@ -95,7 +95,7 @@ describe('validateBody', () => {
 });
 
 describe('validateQuery', () => {
-    let mockResponse;
+    let mockResponse: any;
 
     beforeEach(() => {
         mockResponse = {

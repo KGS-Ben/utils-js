@@ -7,8 +7,8 @@ import {
 import { IAxiosRetryConfigExtended } from 'axios-retry';
 
 export interface Interceptor<V> {
-    onFulfilled?: ((value: V) => V | Promise<V>) | null;
-    onRejected?: ((error: any) => any) | null;
+    onFulfilled?: ((value: V) => V | Promise<V>) | undefined;
+    onRejected?: ((error: any) => any) | undefined;
     options?: AxiosInterceptorOptions;
 }
 

@@ -8,9 +8,14 @@ import {
     VerifyAccessToken,
 } from './types/strategies';
 import { Authenticator } from 'passport';
-import LocalStrategy from 'passport-local';
+import {
+    IStrategyOptionsWithRequest,
+    IVerifyOptions,
+    Strategy as LocalStrategy,
+} from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
 import { HttpStatusCode } from 'axios';
+import { Request } from 'express';
 
 /**
  * Verify a user's login and apply two factor authentication.
@@ -40,7 +45,7 @@ export function verifyUserLogin(
                 return done(Error('User not found'), false);
             }
 
-            if (process.env.NODE_ENV.toLowerCase() === 'dev') {
+            if (process?.env?.NODE_ENV?.toLowerCase() === 'dev') {
                 return done(null, user);
             }
 
@@ -77,7 +82,7 @@ export function verifyAccessToken(payload: any, done: VerifiedCallback): VerifyA
             let user = await getUser(payload.username);
 
             if (!user) {
-                return null;
+                return;
             }
 
             if (user.password !== payload.password) {
@@ -143,10 +148,15 @@ export function applyUserLogin(
 ) {
     passport.use(
         new LocalStrategy(
-            { passReqToCallback: true },
-            (req: TwoFactorRequest, username: string, password: string, done: VerifiedCallback) => {
+            { passReqToCallback: true } as IStrategyOptionsWithRequest,
+            (
+                req: Request,
+                username: string,
+                password: string,
+                done: (error: any, user?: Express.User | false, options?: IVerifyOptions) => void
+            ) => {
                 return verifyUserLogin(
-                    req,
+                    req as TwoFactorRequest,
                     username,
                     password,
                     done

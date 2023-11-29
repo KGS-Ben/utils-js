@@ -23,7 +23,7 @@ export class PassportDecorator {
     passportInstance: Authenticator;
 
     constructor() {
-        //@ts-expect-error
+        //@ts-ignore
         this.passportInstance = new Passport();
     }
 
