@@ -4,12 +4,16 @@
         "outDir": "dist",
         "sourceMap": true,
         "esModuleInterop": true,
-        "typeRoots": [
-            "./node_modules/@types",
-            "**/*/types",
-        ],
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ESNext",
         "declaration": true
     },
+    "include": [
+        "index.ts",
+        "dist/**/*.ts",
+        "**/*/types",
+    ],
     "exclude": [
         "node_modules",
         "dist",
