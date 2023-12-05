@@ -4,7 +4,6 @@
   "description": "Commonly used JS actions",
   "main": "dist/index.js",
   "scripts": {
-    "install": "npm run build",
     "build": "npx tsc",
     "test": "jest test",
     "prettier": "npx prettier . --write"
