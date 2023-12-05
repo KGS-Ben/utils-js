@@ -9,7 +9,7 @@ Common javascript utilities for KGS applications
 ### Create a custom axios instance
 
 ```js
-const { AxiosDecorator } = require('utils/dist/axios-utils');
+const { AxiosDecorator } = require('@kgs-research/utils');
 // Axios client with baseURL configured
 const httpClient = new AxiosDecorator({ baseURL: 'http://sendText.com' })
     // Simplify the error logs
@@ -25,7 +25,7 @@ const httpClient = new AxiosDecorator({ baseURL: 'http://sendText.com' })
 ### Create a custom passport instance
 
 ```js
-const { PassportDecorator } = require('utils');
+const { PassportDecorator } = require('@kgs-research/utils');
 const passport = new PassportDecorator()
     .addSerializeUser()
     .addAccessTokenValidation(secret, getUser)
@@ -36,7 +36,7 @@ const passport = new PassportDecorator()
 ## express-middlewares
 
 ```js
-const { expressMiddlewares } = require('utils');
+const { expressMiddlewares } = require('@kgs-research/utils');
 // POST /api/save
 router.post(
     '/api/save',
