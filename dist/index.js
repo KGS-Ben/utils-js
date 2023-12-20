@@ -20,9 +20,11 @@ __exportStar(require("./lib/express-middlewares/validateRequest"), exports);
 const axios_utils_1 = require("./lib/axios-utils");
 const passport_1 = require("./lib/passport");
 const validateRequest_1 = require("./lib/express-middlewares/validateRequest");
+const lru_1 = require("./lib/lru");
 exports.default = {
     AxiosDecorator: axios_utils_1.AxiosDecorator,
     PassportDecorator: passport_1.PassportDecorator,
+    Lru: lru_1.Lru,
     expressMiddlewares: {
         validateBody: validateRequest_1.validateBody,
         validateQuery: validateRequest_1.validateQuery,
