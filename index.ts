@@ -1,6 +1,7 @@
 export * from './lib/axios-utils';
 export * from './lib/passport';
 export * from './lib/express-middlewares/validateRequest';
+export * from './lib/lru';
 
 import { AxiosDecorator } from './lib/axios-utils';
 import { PassportDecorator } from './lib/passport';
