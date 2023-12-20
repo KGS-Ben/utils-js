@@ -1,6 +1,10 @@
 # utils-js
 
-Common javascript utilities for KGS applications
+Common javascript utilities for KGS applications.
+
+In order for npm to pull the latest version: 
+- The package version must be updated with each new feature 
+- A new tag on the repository must be created
 
 # Usage
 
