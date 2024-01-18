@@ -13,6 +13,7 @@ import {
     IVerifyOptions,
     Strategy as LocalStrategy,
 } from 'passport-local';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { Strategy as JwtStrategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
 import { HttpStatusCode } from 'axios';
 import { Request } from 'express';
@@ -106,13 +107,31 @@ export function applySerializeUser(passport: Authenticator) {
 }
 
 /**
+ * Authenticate a Bearer token.
+ *
+ * @param {String} providedToken user provided token
+ * @param {String} validToken expected auth token
+ * @param {VerifiedCallback} done Callback function upon authenticated
+ */
+export function verifyBearerToken(
+    providedToken: String,
+    validToken: String,
+    done: VerifiedCallback
+) {
+    if (providedToken === validToken) {
+        return done(null, false);
+    }
+
+    return done('Unauthorized access');
+}
+
+/**
  * Add a strategy that validates a request's access token.
  * Expects header as: Authorization: "JWT <TOKEN_HERE>"
  *
  * @param passport A passport instance to apply a strategy to
  * @param accessTokenSecret Access Token Secret to validate with
  * @param getUser Function to retrieve a user's access token data
- * @returns {PassportDecorator} this PassportDecorator
  */
 export function applyAccessTokenValidation(
     passport: Authenticator,
@@ -138,7 +157,6 @@ export function applyAccessTokenValidation(
  * @param authenticateUser Function to authenticate a user
  * @param validateTwoFactor Function to validate a 2FA code
  * @param sendTwoFactorEmail Function to send a 2FA email
- * @returns {PassportDecorator} this PassportDecorator
  */
 export function applyUserLogin(
     passport: Authenticator,
@@ -163,5 +181,20 @@ export function applyUserLogin(
                 )(authenticateUser, validateTwoFactor, sendTwoFactorEmail);
             }
         )
+    );
+}
+
+/**
+ * Adds a bearer token strategy.
+ * Expects header: Authorization: 'Bearer <token>'
+ *
+ * @param passport A passport instance
+ * @param expectedToken The valid bearer token
+ */
+export function applyBearerToken(passport: Authenticator, expectedToken: string) {
+    passport.use(
+        new BearerStrategy((token: string, done: VerifiedCallback) => {
+            return verifyBearerToken(token, expectedToken, done);
+        })
     );
 }

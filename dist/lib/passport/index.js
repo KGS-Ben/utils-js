@@ -68,6 +68,17 @@ class PassportDecorator {
         return this;
     }
     /**
+     * Add a strategy that validates a request's bearer token.
+     * Expects header as: Authorization: "Bearer <TOKEN_HERE>"
+     *
+     * @param {string} validBearerToken Bearer Token Secret
+     * @returns {PassportDecorator} this PassportDecorator
+     */
+    addBearerTokenValidation(validBearerToken) {
+        (0, strategies_1.applyBearerToken)(this.passportInstance, validBearerToken);
+        return this;
+    }
+    /**
      * Get the decorated passport instance.
      *
      * @returns {Authenticator} The decorated passport instance

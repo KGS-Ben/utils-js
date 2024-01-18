@@ -29,6 +29,6 @@ exports.default = {
     expressMiddlewares: {
         validateBody: validateRequest_1.validateBody,
         validateQuery: validateRequest_1.validateQuery,
-    }
+    },
 };
 //# sourceMappingURL=index.js.map

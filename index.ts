@@ -15,5 +15,5 @@ export default {
     expressMiddlewares: {
         validateBody,
         validateQuery,
-    }
+    },
 };

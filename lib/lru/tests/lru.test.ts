@@ -1,4 +1,4 @@
-import { Lru } from '../index'
+import { Lru } from '../index';
 
 describe('LruCache', () => {
     it('should add keys', () => {

@@ -24,13 +24,20 @@ export declare function verifyAccessToken(payload: any, done: VerifiedCallback):
  */
 export declare function applySerializeUser(passport: Authenticator): void;
 /**
+ * Authenticate a Bearer token.
+ *
+ * @param {String} providedToken user provided token
+ * @param {String} validToken expected auth token
+ * @param {VerifiedCallback} done Callback function upon authenticated
+ */
+export declare function verifyBearerToken(providedToken: String, validToken: String, done: VerifiedCallback): void;
+/**
  * Add a strategy that validates a request's access token.
  * Expects header as: Authorization: "JWT <TOKEN_HERE>"
  *
  * @param passport A passport instance to apply a strategy to
  * @param accessTokenSecret Access Token Secret to validate with
  * @param getUser Function to retrieve a user's access token data
- * @returns {PassportDecorator} this PassportDecorator
  */
 export declare function applyAccessTokenValidation(passport: Authenticator, accessTokenSecret: string, getUser: GetUserByUsername): void;
 /**
@@ -40,6 +47,13 @@ export declare function applyAccessTokenValidation(passport: Authenticator, acce
  * @param authenticateUser Function to authenticate a user
  * @param validateTwoFactor Function to validate a 2FA code
  * @param sendTwoFactorEmail Function to send a 2FA email
- * @returns {PassportDecorator} this PassportDecorator
  */
 export declare function applyUserLogin(passport: Authenticator, authenticateUser: GetUserDataWithAuth, validateTwoFactor: ValidateTwoFactorCode, sendTwoFactorEmail: SendTwoFactorEmail): void;
+/**
+ * Adds a bearer token strategy.
+ * Expects header: Authorization: 'Bearer <token>'
+ *
+ * @param passport A passport instance
+ * @param expectedToken The valid bearer token
+ */
+export declare function applyBearerToken(passport: Authenticator, expectedToken: string): void;
