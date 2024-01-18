@@ -6,7 +6,7 @@ export class Lru {
     maxSize: number;
     cache: Map<any, any>;
 
-    constructor(maxSize : number) {
+    constructor(maxSize: number) {
         this.maxSize = maxSize;
         this.cache = new Map();
     }

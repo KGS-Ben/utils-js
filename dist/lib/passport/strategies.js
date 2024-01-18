@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.applyUserLogin = exports.applyAccessTokenValidation = exports.applySerializeUser = exports.verifyAccessToken = exports.verifyUserLogin = void 0;
+exports.applyBearerToken = exports.applyUserLogin = exports.applyAccessTokenValidation = exports.verifyBearerToken = exports.applySerializeUser = exports.verifyAccessToken = exports.verifyUserLogin = void 0;
 const passport_local_1 = require("passport-local");
+const passport_http_bearer_1 = require("passport-http-bearer");
 const passport_jwt_1 = require("passport-jwt");
 const axios_1 = require("axios");
 /**
@@ -79,13 +80,26 @@ function applySerializeUser(passport) {
 }
 exports.applySerializeUser = applySerializeUser;
 /**
+ * Authenticate a Bearer token.
+ *
+ * @param {String} providedToken user provided token
+ * @param {String} validToken expected auth token
+ * @param {VerifiedCallback} done Callback function upon authenticated
+ */
+function verifyBearerToken(providedToken, validToken, done) {
+    if (providedToken === validToken) {
+        return done(null, true);
+    }
+    return done('Unauthorized access');
+}
+exports.verifyBearerToken = verifyBearerToken;
+/**
  * Add a strategy that validates a request's access token.
  * Expects header as: Authorization: "JWT <TOKEN_HERE>"
  *
  * @param passport A passport instance to apply a strategy to
  * @param accessTokenSecret Access Token Secret to validate with
  * @param getUser Function to retrieve a user's access token data
- * @returns {PassportDecorator} this PassportDecorator
  */
 function applyAccessTokenValidation(passport, accessTokenSecret, getUser) {
     passport.use('jwt', new passport_jwt_1.Strategy({
@@ -101,7 +115,6 @@ exports.applyAccessTokenValidation = applyAccessTokenValidation;
  * @param authenticateUser Function to authenticate a user
  * @param validateTwoFactor Function to validate a 2FA code
  * @param sendTwoFactorEmail Function to send a 2FA email
- * @returns {PassportDecorator} this PassportDecorator
  */
 function applyUserLogin(passport, authenticateUser, validateTwoFactor, sendTwoFactorEmail) {
     passport.use(new passport_local_1.Strategy({ passReqToCallback: true }, (req, username, password, done) => {
@@ -109,4 +122,17 @@ function applyUserLogin(passport, authenticateUser, validateTwoFactor, sendTwoFa
     }));
 }
 exports.applyUserLogin = applyUserLogin;
+/**
+ * Adds a bearer token strategy.
+ * Expects header: Authorization: 'Bearer <token>'
+ *
+ * @param passport A passport instance
+ * @param expectedToken The valid bearer token
+ */
+function applyBearerToken(passport, expectedToken) {
+    passport.use(new passport_http_bearer_1.Strategy((token, done) => {
+        return verifyBearerToken(token, expectedToken, done);
+    }));
+}
+exports.applyBearerToken = applyBearerToken;
 //# sourceMappingURL=strategies.js.map

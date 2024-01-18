@@ -6,7 +6,7 @@ import {
     User,
     ValidateTwoFactorCode,
 } from '../types/strategies';
-import { verifyAccessToken, verifyUserLogin } from '../strategies';
+import { verifyAccessToken, verifyBearerToken, verifyUserLogin } from '../strategies';
 import { HttpStatusCode } from 'axios';
 
 const testUser: User = {
@@ -190,5 +190,22 @@ describe('verifyUserLogin', () => {
         expect(validCode).toHaveBeenCalled();
         expect(sendTwoFactorEmail).not.toHaveBeenCalled();
         expect(doneCb).toHaveBeenCalled();
+    });
+});
+
+describe('verifyBearerToken', () => {
+    const VALID_TOKEN = 'VALID_TOKEN';
+    it('should not validate an invalid token', done => {
+        verifyBearerToken('invalidToken', VALID_TOKEN, error => {
+            expect(error).toBeTruthy();
+            done();
+        });
+    });
+
+    it('should validate a valid token', done => {
+        verifyBearerToken(VALID_TOKEN, VALID_TOKEN, error => {
+            expect(error).toBeFalsy();
+            done();
+        });
     });
 });

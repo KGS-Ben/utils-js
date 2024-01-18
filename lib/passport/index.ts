@@ -1,5 +1,10 @@
 import { Passport, Authenticator } from 'passport';
-import { applyAccessTokenValidation, applySerializeUser, applyUserLogin } from './strategies';
+import {
+    applyAccessTokenValidation,
+    applyBearerToken,
+    applySerializeUser,
+    applyUserLogin,
+} from './strategies';
 import {
     GetUserByUsername,
     GetUserDataWithAuth,
@@ -72,6 +77,18 @@ export class PassportDecorator {
         getUser: GetUserByUsername
     ): PassportDecorator {
         applyAccessTokenValidation(this.passportInstance, accessTokenSecret, getUser);
+        return this;
+    }
+
+    /**
+     * Add a strategy that validates a request's bearer token.
+     * Expects header as: Authorization: "Bearer <TOKEN_HERE>"
+     *
+     * @param {string} validBearerToken Bearer Token Secret
+     * @returns {PassportDecorator} this PassportDecorator
+     */
+    addBearerTokenValidation(validBearerToken: string) {
+        applyBearerToken(this.passportInstance, validBearerToken);
         return this;
     }
 
