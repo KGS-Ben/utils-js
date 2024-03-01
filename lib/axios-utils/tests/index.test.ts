@@ -206,6 +206,7 @@ describe('addErrorLogReducer', () => {
                 await httpClient.get('http://test.com');
                 throw Error('HTTP client did not throw an error');
             } catch (error: any) {
+                expect(error.uri).toEqual('http://test.com');
                 expect(error.status).toEqual(429);
                 expect(error.data).toEqual(errorBody);
                 expect(error.message).toEqual('Request failed with status code 429');
@@ -223,6 +224,7 @@ describe('addErrorLogReducer', () => {
             await httpClient.get('http://test.com');
             throw Error('HTTP client did not throw an error');
         } catch (error: any) {
+            expect(error.uri).toEqual('http://test.com');
             expect(error.message).toEqual('This is an error');
         }
     });
