@@ -119,18 +119,28 @@ export class AxiosDecorator implements AxiosDecoratorClass<AxiosDecorator> {
      */
     public addErrorLogReducer(): AxiosDecorator {
         const axiosLogReducer = (error: AxiosError) => {
-            if (error?.response) {
-                return Promise.reject({
-                    status: error.response.status,
-                    message: error.message,
-                    data: error.response.data,
-                });
-            } else if (error.request) {
-                // Some error setting up the request
-                return Promise.reject({
-                    message: error.cause?.message || error.message || 'Request failed to send',
-                    request: error.request,
-                });
+            try {
+                if (error?.response) {
+                    let paramString = new URLSearchParams(error?.config?.params).toString();
+                    paramString = paramString ? `?${paramString}` : '';
+                    return Promise.reject({
+                        uri: `${error?.config?.url}${paramString}`,
+                        status: error.response.status,
+                        message: error.message,
+                        data: error.response.data,
+                    });
+                } else if (error?.request) {
+                    // Some error setting up the request
+                    let paramString = new URLSearchParams(error?.config?.params).toString();
+                    paramString = paramString ? `?${paramString}` : '';
+                    return Promise.reject({
+                        uri: `${error?.config?.url}${paramString}`,
+                        message: error.cause?.message || error.message || 'Request failed to send',
+                        request: error.request,
+                    });
+                }
+            } catch (error) {
+                console.error('Error reducing axios error:', error);
             }
 
             return Promise.reject(error);

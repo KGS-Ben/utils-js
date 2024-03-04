@@ -7,6 +7,7 @@ In order for npm to pull the latest version:
 -   The package version must be updated with each new feature
 -   A new tag on the repository must be created
 -   The package must run `npm run build` with each change
+
 # Usage
 
 ## axios-utils
