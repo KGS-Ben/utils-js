@@ -25,11 +25,13 @@ export default {
         validateBody,
         validateQuery,
     },
-    sleep,
-    convertTimeStringToSeconds,
-    randomElement,
-    roundToNearest,
-    deleteFiles,
-    decapitalizeFirstLetter,
-    randomRange,
+    generic: {
+        sleep,
+        convertTimeStringToSeconds,
+        randomElement,
+        roundToNearest,
+        deleteFiles,
+        decapitalizeFirstLetter,
+        randomRange,
+    }
 };

@@ -16,7 +16,7 @@ export async function sleep(millis: number): Promise<void> {
 /**
  * Convert a time string like '17 min 30 sec' to seconds
  *
- * @param {String} timeString Time string
+ * @param {String} timeString - Time string
  * @returns {Number} Time in seconds
  */
 export function convertTimeStringToSeconds(timeString: string): number {
@@ -65,6 +65,7 @@ export function roundToNearest(toRound: number, digits: number = 2): number {
  * Delete any number of files.
  *
  * @param {...string} filesToDelete - List of files to delete
+ * @throws {Error} - If any file fails to delete
  */
 export async function deleteFiles(...filesToDelete: string[]): Promise<void> {
     for (const filename of filesToDelete) {
@@ -81,17 +82,17 @@ export async function deleteFiles(...filesToDelete: string[]): Promise<void> {
  * Decapitalize first character of a string
  *
  * @param {string} str - String to decap
- * @returns {string} Decapped string
+ * @returns {string} Decapitalized string, or empty string if invalid
  */
 export function decapitalizeFirstLetter(str: string): string {
-    return str.charAt(0).toLowerCase() + str.slice(1);
+    return !str ? '' : str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 /**
  * Generate a random number within a range.
  *
- * @param {number} min Lower bound of random number
- * @param {number} max Upper bound of random number
+ * @param {number} min - Lower bound of random number
+ * @param {number} max - Upper bound of random number
  * @returns {number} A number within the given range. min <= x <= max
  */
 export function randomRange(min: number, max: number): number {
