@@ -8,6 +8,14 @@ In order for npm to pull the latest version:
 -   A new tag on the repository must be created
 -   The package must run `npm run build` with each change
 
+# Installation
+
+Use npm to install the package.
+
+```bash
+npm install @kgs-research/utils
+```
+
 # Usage
 
 ## axios-utils
@@ -35,7 +43,7 @@ const { PassportDecorator } = require('@kgs-research/utils');
 const passport = new PassportDecorator()
     .addSerializeUser()
     .addAccessTokenValidation(secret, getUser)
-    .addUserValidation(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
+    .addUserLogin(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
     .getPassport();
 ```
 
