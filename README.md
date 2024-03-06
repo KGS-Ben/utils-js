@@ -79,7 +79,7 @@ convertTimeStringToSeconds(timeString);
 randomElement(array);
 
 // Round to nearest decimal place, digits defaults to 2 if not specified.
-roundToNearest(number, digits = 2);
+roundToNearest(number, (digits = 2));
 
 // Delete all the provided files
 deleteFiles(...filesToDelete);

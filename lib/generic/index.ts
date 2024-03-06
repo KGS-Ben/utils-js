@@ -13,7 +13,6 @@ export async function sleep(millis: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
 
-
 /**
  * Convert a time string like '17 min 30 sec' to seconds
  *

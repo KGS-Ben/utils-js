@@ -1,4 +1,10 @@
-import { randomElement, decapitalizeFirstLetter, randomRange, roundToNearest, convertTimeStringToSeconds } from '../index';
+import {
+    randomElement,
+    decapitalizeFirstLetter,
+    randomRange,
+    roundToNearest,
+    convertTimeStringToSeconds,
+} from '../index';
 
 describe('convertTimeStringToSeconds function', () => {
     test('should convert minutes to seconds correctly', () => {
