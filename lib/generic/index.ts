@@ -9,7 +9,7 @@ import fs from 'fs/promises';
  * @param {number} millis - time to sleep (ms)
  * @returns {Promise<void>} - Promise that resolves after millis
  */
-export async function sleep(millis: number): Promise<void> {
+export function sleep(millis: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
 
