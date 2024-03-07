@@ -22,6 +22,7 @@ const axios_utils_1 = require("./lib/axios-utils");
 const passport_1 = require("./lib/passport");
 const validateRequest_1 = require("./lib/express-middlewares/validateRequest");
 const lru_1 = require("./lib/lru");
+const generic_1 = require("./lib/generic");
 exports.default = {
     AxiosDecorator: axios_utils_1.AxiosDecorator,
     PassportDecorator: passport_1.PassportDecorator,
@@ -30,5 +31,12 @@ exports.default = {
         validateBody: validateRequest_1.validateBody,
         validateQuery: validateRequest_1.validateQuery,
     },
+    sleep: generic_1.sleep,
+    convertTimeStringToSeconds: generic_1.convertTimeStringToSeconds,
+    randomElement: generic_1.randomElement,
+    roundToNearest: generic_1.roundToNearest,
+    deleteFiles: generic_1.deleteFiles,
+    decapitalizeFirstLetter: generic_1.decapitalizeFirstLetter,
+    randomRange: generic_1.randomRange
 };
 //# sourceMappingURL=index.js.map

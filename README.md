@@ -8,6 +8,14 @@ In order for npm to pull the latest version:
 -   A new tag on the repository must be created
 -   The package must run `npm run build` with each change
 
+# Installation
+
+Use npm to install the package.
+
+```bash
+npm install @kgs-research/utils
+```
+
 # Usage
 
 ## axios-utils
@@ -35,7 +43,7 @@ const { PassportDecorator } = require('@kgs-research/utils');
 const passport = new PassportDecorator()
     .addSerializeUser()
     .addAccessTokenValidation(secret, getUser)
-    .addUserValidation(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
+    .addUserLogin(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
     .getPassport();
 ```
 
@@ -56,6 +64,31 @@ router.get(
     expressMiddlewares.validateQuery(['queryParam1', 'queryParam2']),
     (req, res) => res.send('OK')
 );
+```
+
+## Generic functions
+
+```js
+// Sleeps process for N milliseconds
+sleep(millis);
+
+// Converts a time string like '17 min 30 sec' to seconds
+convertTimeStringToSeconds(timeString);
+
+// Gets a random value from an array
+randomElement(array);
+
+// Round to nearest decimal place, digits defaults to 2 if not specified.
+roundToNearest(number, (digits = 2));
+
+// Delete all the provided files
+deleteFiles(...filesToDelete);
+
+// Decapitalize first character of a string
+decapitalizeFirstLetter(str);
+
+// Generates a random number [min, max]; (i.e min <= x <= max)
+randomRange(min, max);
 ```
 
 ## Module exports
