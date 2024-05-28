@@ -88,7 +88,7 @@ exports.applySerializeUser = applySerializeUser;
  */
 function verifyBearerToken(providedToken, validToken, done) {
     if (providedToken === validToken) {
-        return done(null, false);
+        return done(null, true);
     }
     return done('Unauthorized access');
 }
