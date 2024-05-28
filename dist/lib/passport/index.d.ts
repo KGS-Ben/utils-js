@@ -8,7 +8,7 @@ export * from './types/strategies';
  * const passport = new PassportDecorator()
  *   .addSerializeUser()
  *   .addAccessTokenValidation(secret, getUser)
- *   .addUserValidation(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
+ *   .addUserLogin(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
  *   .getPassport();
  */
 export declare class PassportDecorator {

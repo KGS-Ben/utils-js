@@ -25,7 +25,7 @@ __exportStar(require("./types/strategies"), exports);
  * const passport = new PassportDecorator()
  *   .addSerializeUser()
  *   .addAccessTokenValidation(secret, getUser)
- *   .addUserValidation(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
+ *   .addUserLogin(authenticateUser, validateTwoFactor, sendTwoFactorEmail)
  *   .getPassport();
  */
 class PassportDecorator {
