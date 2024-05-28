@@ -196,15 +196,17 @@ describe('verifyUserLogin', () => {
 describe('verifyBearerToken', () => {
     const VALID_TOKEN = 'VALID_TOKEN';
     it('should not validate an invalid token', done => {
-        verifyBearerToken('invalidToken', VALID_TOKEN, error => {
+        verifyBearerToken('invalidToken', VALID_TOKEN, (error, user) => {
             expect(error).toBeTruthy();
+            expect(user).toBeFalsy();
             done();
         });
     });
 
     it('should validate a valid token', done => {
-        verifyBearerToken(VALID_TOKEN, VALID_TOKEN, error => {
+        verifyBearerToken(VALID_TOKEN, VALID_TOKEN, (error, user) => {
             expect(error).toBeFalsy();
+            expect(user).toBeTruthy();
             done();
         });
     });

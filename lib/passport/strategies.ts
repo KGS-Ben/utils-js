@@ -119,7 +119,7 @@ export function verifyBearerToken(
     done: VerifiedCallback
 ) {
     if (providedToken === validToken) {
-        return done(null, false);
+        return done(null, true);
     }
 
     return done('Unauthorized access');
