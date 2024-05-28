@@ -15,12 +15,14 @@ declare const _default: {
         validateBody: typeof validateBody;
         validateQuery: typeof validateQuery;
     };
-    sleep: typeof sleep;
-    convertTimeStringToSeconds: typeof convertTimeStringToSeconds;
-    randomElement: typeof randomElement;
-    roundToNearest: typeof roundToNearest;
-    deleteFiles: typeof deleteFiles;
-    decapitalizeFirstLetter: typeof decapitalizeFirstLetter;
-    randomRange: typeof randomRange;
+    generic: {
+        sleep: typeof sleep;
+        convertTimeStringToSeconds: typeof convertTimeStringToSeconds;
+        randomElement: typeof randomElement;
+        roundToNearest: typeof roundToNearest;
+        deleteFiles: typeof deleteFiles;
+        decapitalizeFirstLetter: typeof decapitalizeFirstLetter;
+        randomRange: typeof randomRange;
+    };
 };
 export default _default;

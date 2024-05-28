@@ -8,7 +8,7 @@ export declare function sleep(millis: number): Promise<void>;
 /**
  * Convert a time string like '17 min 30 sec' to seconds
  *
- * @param {String} timeString Time string
+ * @param {String} timeString - Time string
  * @returns {Number} Time in seconds
  */
 export declare function convertTimeStringToSeconds(timeString: string): number;
@@ -31,20 +31,21 @@ export declare function roundToNearest(toRound: number, digits?: number): number
  * Delete any number of files.
  *
  * @param {...string} filesToDelete - List of files to delete
+ * @throws {Error} - If any file fails to delete
  */
 export declare function deleteFiles(...filesToDelete: string[]): Promise<void>;
 /**
  * Decapitalize first character of a string
  *
  * @param {string} str - String to decap
- * @returns {string} Decapped string
+ * @returns {string} Decapitalized string, or empty string if invalid
  */
 export declare function decapitalizeFirstLetter(str: string): string;
 /**
  * Generate a random number within a range.
  *
- * @param {number} min Lower bound of random number
- * @param {number} max Upper bound of random number
+ * @param {number} min - Lower bound of random number
+ * @param {number} max - Upper bound of random number
  * @returns {number} A number within the given range. min <= x <= max
  */
 export declare function randomRange(min: number, max: number): number;
