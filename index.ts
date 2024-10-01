@@ -4,6 +4,7 @@ export * from './lib/express-middlewares/validateRequest';
 export * from './lib/lru';
 
 import { AxiosDecorator } from './lib/axios-utils';
+import { Router } from './lib/webhooks';
 import { PassportDecorator } from './lib/passport';
 import { validateBody, validateQuery } from './lib/express-middlewares/validateRequest';
 import { Lru } from './lib/lru';
@@ -33,5 +34,8 @@ export default {
         deleteFiles,
         decapitalizeFirstLetter,
         randomRange,
-    }
+    },
+    webhooks: {
+        Router,
+    },
 };
